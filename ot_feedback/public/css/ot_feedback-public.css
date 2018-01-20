@@ -1,0 +1,74 @@
+/**
+ * All of the CSS for your public-facing functionality should be
+ * included in this file.
+ */
+.ot-feedback{
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    background: gray;
+    text-align: center;
+    padding: 5px;
+	z-index:999999;
+}
+.ot-feedback img {
+    width: 28px;
+}
+.c {
+    max-width: 500px;
+    resize: none;
+    width: 100%;
+    height: 100px;
+    border-radius: 7px;
+    margin-bottom: 10px;
+}
+#ob_form {
+    text-align:center;
+}
+#ob_form input[type="submit"]:hover,#ob_form input[type="reset"] {
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #1e62d0), color-stop(1, #3d94f6));
+    background: -moz-linear-gradient(top, #1e62d0 5%, #3d94f6 100%);
+    background: -webkit-linear-gradient(top, #1e62d0 5%, #3d94f6 100%);
+    background: -o-linear-gradient(top, #1e62d0 5%, #3d94f6 100%);
+    background: -ms-linear-gradient(top, #1e62d0 5%, #3d94f6 100%);
+    background: linear-gradient(to bottom, #1e62d0 5%, #3d94f6 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1e62d0', endColorstr='#3d94f6',GradientType=0);
+    background-color: #1e62d0;
+
+}
+
+#ob_form input[type="submit"],#ob_form input[type="reset"]{
+-moz-box-shadow:inset 0px 1px 0px 0px #97c4fe;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #97c4fe;
+	box-shadow:inset 0px 1px 0px 0px #97c4fe;
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #3d94f6), color-stop(1, #1e62d0));
+	background:-moz-linear-gradient(top, #3d94f6 5%, #1e62d0 100%);
+	background:-webkit-linear-gradient(top, #3d94f6 5%, #1e62d0 100%);
+	background:-o-linear-gradient(top, #3d94f6 5%, #1e62d0 100%);
+	background:-ms-linear-gradient(top, #3d94f6 5%, #1e62d0 100%);
+	background:linear-gradient(to bottom, #3d94f6 5%, #1e62d0 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#3d94f6', endColorstr='#1e62d0',GradientType=0);
+	background-color:#3d94f6;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+	border:1px solid #337fed;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:15px;
+	font-weight:bold;
+	    padding: 6px 10px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #1570cd;
+
+}
+
+.fancybox-slide>div {
+    background: #f8f8ff;
+}
+footer{
+	padding-bottom:15px;
+}
