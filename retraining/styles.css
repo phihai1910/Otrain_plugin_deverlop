@@ -1,0 +1,17 @@
+/**
+ *-----------------------------------------------------------------------------
+ * Retraining Notification
+ *-----------------------------------------------------------------------------
+ * Custom styles
+ *
+ * @package     local_retraining
+ * @copyright   OTrain Pty Ltd <http://www.otrain.com.au>
+ *-----------------------------------------------------------------------------
+ **/
+
+h5.retraining {
+	border-bottom: 1px solid silver;
+	color: #666;
+	float: left;
+	margin: 10px;
+}

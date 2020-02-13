@@ -1,0 +1,61 @@
+<?php 
+
+
+
+$pdf = new pdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+$pdf->SetTitle('Signature certificate');
+$pdf->SetSubject('Signature');
+
+$pdf->SetHeaderData($CFG->root.'/mod/signature/demo.png' , 30  );
+
+$pdf->AddPage();
+
+
+$pdf->WriteHTML('<h1 style="text-align:center">Certificate of Completion</h1>');
+$pdf->WriteHTML('<h3>Summary</h3>'); 
+$pdf->Ln(5);
+$pdf->WriteHTML('<div>
+	<table>
+		<tr>
+			<td '.$widthcell.' >Sent on</td>
+			<td>'.		$timestart .'</td>
+		</tr>
+		<tr>
+			<td '.$widthcell.' >Completed on</td>
+			<td>'.  $timecreate.'</td>
+		</tr>
+	</table>
+</div>');
+$pdf->Ln(10);
+$pdf->WriteHTML('<h3>Recipients</h3>');
+$pdf->Ln(5); 
+
+
+		
+$pdf->WriteHTML('<div>
+	<table border="1" cellpadding="10" >
+		<tr><td colspan="2">'. $USER->firstname.' '. $USER->lastname .' ( '. $USER->email.' )</td></tr>
+		<tr>
+			<td '.$widthcell.' >View on</td>
+			<td>'.		$timestart .'</td>
+			<td rowspan="4">'. $img .'</td>
+		</tr>
+		<tr>
+			<td '.$widthcell.' >Signed on</td>
+			<td>'. $timecreate  .'</td>
+		</tr>
+		<tr>
+			<td '.$widthcell.' >Accessed from</td>
+			<td>'. $ip .'</td>
+		</tr>
+		<tr>
+			<td '.$widthcell.' >Device used</td>
+			<td>'. $mobile .'</td>
+		</tr>
+	</table>
+
+</div>');
+
+
+
+?>

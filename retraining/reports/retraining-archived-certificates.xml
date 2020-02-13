@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<report version="2016020103"><visible><![CDATA[1]]></visible>
+<name><![CDATA[Retraining: Archived Certificates]]></name>
+<summary><![CDATA[]]></summary>
+<type><![CDATA[sql]]></type>
+<pagination><![CDATA[100]]></pagination>
+<components><![CDATA[YToyOntzOjk6ImN1c3RvbXNxbCI7YToxOntzOjY6ImNvbmZpZyI7Tzo4OiJzdGRDbGFzcyI6Njp7czo4OiJxdWVyeXNxbCI7czo0NDk6InNlbGVjdCUwRCUwQSUwOWFpYy51c2VyaWQlMkMlMEQlMEElMDl1LmZpcnN0bmFtZSUyQyUwRCUwQSUwOXUubGFzdG5hbWUlMkMlMEQlMEElMDlhaWMuY29kZSUyQyUwRCUwQSUwOWZyb21fdW5peHRpbWUlMjhhaWMudGltZWNyZWF0ZWQlMjkrYXMraXNzdWVfZGF0ZSUyQyUwRCUwQSUwOWMuZnVsbG5hbWUlMkMlMEQlMEElMDljZS5uYW1lJTBEJTBBZnJvbSslMEQlMEElMDlwcmVmaXhfYXJjaGl2ZV9pc3N1ZWRfY2VydHMrYWljK2lubmVyK2pvaW4rcHJlZml4X3VzZXIrdSUwRCUwQSUwOW9uK3UuaWQrJTNEK2FpYy51c2VyaWQlMEQlMEElMDlpbm5lcitqb2luK3ByZWZpeF9zaW1wbGVjZXJ0aWZpY2F0ZStjZSUwRCUwQSUwOW9uK2NlLmlkKyUzRCthaWMuY2VydGlmaWNhdGVpZCUwRCUwQSUwOWlubmVyK2pvaW4rcHJlZml4X2NvdXJzZStjJTBEJTBBJTA5b24rYy5pZCslM0QrY2UuY291cnNlIjtzOjg6ImNvdXJzZWlkIjtpOjE7czoxMjoic3VibWl0YnV0dG9uIjtzOjEyOiJTYXZlK2NoYW5nZXMiO3M6MTY6InJlcG9ydGNhdGVnb3JpZXMiO3M6MToiMCI7czoxNzoicmVwb3J0c2luY2F0ZWdvcnkiO3M6MToiMCI7czoxNDoicmVtb3RlcXVlcnlzcWwiO3M6MDoiIjt9fXM6NzoiZmlsdGVycyI7YToxOntzOjg6ImVsZW1lbnRzIjthOjA6e319fQ==]]></components>
+<export><![CDATA[csv,xls,]]></export>
+<jsordering><![CDATA[1]]></jsordering>
+<global><![CDATA[0]]></global>
+<lastexecutiontime><![CDATA[1]]></lastexecutiontime>
+<cron><![CDATA[0]]></cron>
+<remote><![CDATA[0]]></remote>
+</report>
