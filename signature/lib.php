@@ -116,7 +116,7 @@ function signature_add_instance($moduleinstance, $mform = null) {
     $moduleinstance->timecreated = time();
 	/* modifier database field */
 	$moduleinstance->signature_content = $moduleinstance->signature_content['text'];
-
+	// $moduleinstance->userfile = $moduleinstance->userfile;	
     $id = $DB->insert_record('signature', $moduleinstance);
 
     return $id;
@@ -134,12 +134,13 @@ function signature_add_instance($moduleinstance, $mform = null) {
  */
 function signature_update_instance($moduleinstance, $mform = null) {
     global $DB;
-
+	
     $moduleinstance->timemodified = time();
     $moduleinstance->id = $moduleinstance->instance;
 	
 	/* modifier database field */
 	$moduleinstance->signature_content = $moduleinstance->signature_content['text'];
+	
 
     return $DB->update_record('signature', $moduleinstance);
 }
@@ -376,4 +377,19 @@ function base64_to_jpeg($base64_string, $output_file) {
     fclose( $ifp ); 
 
     return $output_file; 
+}
+
+function get_temp_file( $moduleinstance ){
+	global $DB;
+	$pathnamehash = $DB->get_record_sql("SELECT pathnamehash FROM {files} WHERE itemid = ? AND filename <> '.'" , array( $moduleinstance->userfile ) );
+	
+	if( $pathnamehash ){
+		$fs = get_file_storage();
+		$file = $fs->get_file_by_hash( $pathnamehash->pathnamehash);
+		 $tmpfilename = $file->copy_content_to_temp();
+		 
+		 return $tmpfilename ;
+	}
+	
+	return false ;
 }

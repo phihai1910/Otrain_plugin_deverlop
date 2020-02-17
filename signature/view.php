@@ -25,6 +25,8 @@
 require(__DIR__.'/../../config.php');
 require_once(__DIR__.'/lib.php');
 require_once($CFG->libdir.'/pdflib.php');
+
+require_once($CFG->dirroot.'/mod/assign/feedback/editpdf/fpdi/fpdi.php');
 global $USER;
 
 // Course_module ID, or
@@ -46,11 +48,7 @@ if ($id) {
 }
 require_login($course, true, $cm);
 
-
-
-
 $modulecontext = context_module::instance($cm->id);
-
 $content = $moduleinstance->signature_content;
 
 if(isset( $_POST['hiddenSigDataa'] ) ){
@@ -65,11 +63,14 @@ if(isset( $_POST['hiddenSigDataa'] ) ){
 	$widthcell = 'width="100"'; 
 	$to = $USER->email;
 	$to = 'tech@otrain.com.au,'.$USER->email;
-	include 'sign_copy.php';
+	
+	include 'sign_copy2.php';
+	// include 'sign_copy.php';
 	$pdf_copy = $pdf->Output($course->fullname.' copy.pdf', 'E');
 	include 'sign_certification.php';
 	$pdf_certification = $pdf->Output($course->fullname. ' signature completion certificate.pdf', 'E');
 	include 'sign_email.php';
+	
 }
 $PAGE->set_url('/mod/signature/view.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($moduleinstance->name));
@@ -78,12 +79,7 @@ $PAGE->set_context($modulecontext);
 $PAGE->requires->jquery();
 $PAGE->requires->js('/mod/signature/libs/jSignature.min.noconflict.js');
 
-
-
-
 echo $OUTPUT->header();
-
-
 ?>
 <style type="text/css">
 
@@ -134,7 +130,6 @@ echo $OUTPUT->header();
 	<?php echo $content; ?>
 	<?php if(isset( $_POST['hiddenSigDataa'] ) ){
 		
-		// var_dump($_POST['hiddenSigDataa']);
 		$template = '
 		<table>
 		<tr>

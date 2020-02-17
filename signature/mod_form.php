@@ -74,11 +74,21 @@ class mod_signature_mod_form extends moodleform_mod {
 	
 		
 		$mform->addElement('editor', 'signature_content',  get_string('signaturecontent', 'mod_signature') , array('rows' => 10), array('maxfiles' => EDITOR_UNLIMITED_FILES,
-            'noclean' => true, 'context' => $this->context, 'subdirs' => true));
+            'noclean' => true, 'context' => $this->context, 'subdirs' => true ,'enable_filemanagement' => true ,  'removeorphaneddrafts' => true ,  'return_types' =>  FILE_INTERNAL
+			
+			
+			));
         $mform->setType('signature_content', PARAM_RAW); // no XSS prevention here, users must be trusted
         if ($required) {
             $mform->addRule('signature_content', get_string('required'), 'required', null, 'client');
         }
+		
+		$mform->addElement('filepicker', 'userfile', get_string('file'), null,
+                   array('maxbytes' => 5000000000, 'accepted_types' => array('pdf')));
+		$mform->addElement('text' , 'pagenumber', 'Page sign' );
+		$mform->addElement('text' , 'x' , 'Location x');
+		$mform->addElement('text' , 'y' , 'Location Y');
+		
         // Add standard grading elements.
         // $this->standard_grading_coursemodule_elements();
 
@@ -91,7 +101,7 @@ class mod_signature_mod_form extends moodleform_mod {
 	
 	   public function data_preprocessing(&$defaultvalues) {
 		   
-		   
+		   $defaultvalues['userfile'] = $defaultvalues['userfile'];
 		   $defaultvalues['signature_content'] = array(
 			'text' => $defaultvalues['signature_content']
 		   );
