@@ -48,8 +48,16 @@ if ($id) {
 }
 require_login($course, true, $cm);
 
+
+
+
 $modulecontext = context_module::instance($cm->id);
+
 $content = $moduleinstance->signature_content;
+
+
+$link = signature_pluginfile( $course , $cm , $modulecontext , 'content', array( $moduleinstance->userfile , $moduleinstance->filename ) , false  );
+
 
 if(isset( $_POST['hiddenSigDataa'] ) ){
 	

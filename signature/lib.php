@@ -112,14 +112,29 @@ function signature_supports($feature) {
  */
 function signature_add_instance($moduleinstance, $mform = null) {
     global $DB;
-
+	
     $moduleinstance->timecreated = time();
 	/* modifier database field */
 	$moduleinstance->signature_content = $moduleinstance->signature_content['text'];
 	// $moduleinstance->userfile = $moduleinstance->userfile;	
-    $id = $DB->insert_record('signature', $moduleinstance);
+	
+	$moduleinstance->filename = $mform->get_new_filename('userfile');
+	// store file 
+	$context = context_course::instance($moduleinstance->course);
+	$contextid = $context->id;
 
-    return $id;
+    $id = $DB->insert_record('signature', $moduleinstance);
+	
+	
+	$mform->save_stored_file('userfile',
+				    $contextid,
+					'mod_signature',
+					'content',
+					$moduleinstance->userfile,
+					'/',
+					$mform->get_new_filename('userfile'),
+					true);
+	return $id;
 }
 
 /**
@@ -133,14 +148,25 @@ function signature_add_instance($moduleinstance, $mform = null) {
  * @return bool True if successful, false otherwise.
  */
 function signature_update_instance($moduleinstance, $mform = null) {
-    global $DB;
-	
+    global $DB,$USER;
+
     $moduleinstance->timemodified = time();
     $moduleinstance->id = $moduleinstance->instance;
-	
+	$moduleinstance->filename = $mform->get_new_filename('userfile');
 	/* modifier database field */
 	$moduleinstance->signature_content = $moduleinstance->signature_content['text'];
-	
+	// store file 
+	$context = context_course::instance($moduleinstance->course);
+	$contextid = $context->id;
+
+	$mform->save_stored_file('userfile',
+                                                       $contextid ,
+                                                        'mod_signature',
+                                                        'content',
+                                                        $moduleinstance->userfile,
+                                                        '/',
+                                                        $mform->get_new_filename('userfile'),
+                                                        true);
 
     return $DB->update_record('signature', $moduleinstance);
 }
@@ -322,12 +348,34 @@ function signature_get_file_info($browser, $areas, $course, $cm, $context, $file
  */
 function signature_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, $options = array()) {
     global $DB, $CFG;
-
+	
     if ($context->contextlevel != CONTEXT_MODULE) {
         send_file_not_found();
     }
 
     require_login($course, true, $cm);
+	// Leave this line out if you set the itemid to null in make_pluginfile_url (set $itemid to 0 instead).
+    $itemid = array_shift($args); // The first item in the $args array.
+ 
+    // Use the itemid to retrieve any relevant data records and perform any security checks to see if the
+    // user really does have access to the file in question.
+ 
+    // Extract the filename / filepath from the $args array.
+    $filename = array_pop($args); // The last item in the $args array.
+    if (!$args) {
+        $filepath = '/'; // $args is empty => the path is '/'
+    } else {
+        $filepath = '/'.implode('/', $args).'/'; // $args contains elements of the filepath
+    }
+	$context = context_course::instance($cm->course);
+    // Retrieve the file from the Files API.
+    $fs = get_file_storage();
+    $file = $fs->get_file($context->id, 'mod_signature', $filearea, $itemid, $filepath, $filename);
+    if (!$file) {
+        return false; // The file does not exist.
+	}	
+	
+	send_stored_file($file, 86400, 0, $forcedownload, $options);	
     send_file_not_found();
 }
 
