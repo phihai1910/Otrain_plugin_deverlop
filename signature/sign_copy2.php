@@ -10,11 +10,12 @@ for( $pageNo = 1 ; $pageNo <= $pagecount ; $pageNo++ ){
 	$tplIdx = $pdf->importPage($pageNo);
 	 $size = $pdf->getTemplateSize($tplIdx);
 	
-	 if ($size['w'] > $size['h']) {
-        $pdf->AddPage('L', array($size['w'], $size['h']));
-    } else {
-        $pdf->AddPage('P', array($size['w'], $size['h']));
-    }
+	 // if ($size['w'] > $size['h']) {
+        // $pdf->AddPage('L', array($size['w'], $size['h']));
+    // } else {
+        // $pdf->AddPage('P', array($size['w'], $size['h']));
+    // }
+	$pdf->AddPage();
 	 $pdf->useTemplate($tplIdx);
 	if( $pageNo == $moduleinstance->pagenumber)  {
 		// $pdf->SetFont('Helvetica');

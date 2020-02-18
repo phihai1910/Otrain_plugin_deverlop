@@ -120,9 +120,10 @@ function signature_add_instance($moduleinstance, $mform = null) {
 	
 	$moduleinstance->filename = $mform->get_new_filename('userfile');
 	// store file 
-	$context = context_course::instance($moduleinstance->course);
-	$contextid = $context->id;
-
+	// $context = context_course::instance($moduleinstance->course);
+	
+	 $context = context_system::instance();
+	 $contextid = $context->id;
     $id = $DB->insert_record('signature', $moduleinstance);
 	
 	
@@ -156,9 +157,10 @@ function signature_update_instance($moduleinstance, $mform = null) {
 	/* modifier database field */
 	$moduleinstance->signature_content = $moduleinstance->signature_content['text'];
 	// store file 
-	$context = context_course::instance($moduleinstance->course);
-	$contextid = $context->id;
-
+	// $context = context_course::instance($moduleinstance->course);
+	// $contextid = $context->id;
+ $context = context_system::instance();
+	 $contextid = $context->id;
 	$mform->save_stored_file('userfile',
                                                        $contextid ,
                                                         'mod_signature',
@@ -170,6 +172,59 @@ function signature_update_instance($moduleinstance, $mform = null) {
 
     return $DB->update_record('signature', $moduleinstance);
 }
+
+/**
+ * Serves the files from the mod_signature file areas.
+ *
+ * @package     mod_signature
+ * @category    files
+ *
+ * @param stdClass $course The course object.
+ * @param stdClass $cm The course module object.
+ * @param stdClass $context The mod_signature's context.
+ * @param string $filearea The name of the file area.
+ * @param array $args Extra arguments (itemid, path).
+ * @param bool $forcedownload Whether or not force download.
+ * @param array $options Additional options affecting the file serving.
+ */
+function signature_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, $options = array()) {
+    global $DB, $CFG;
+	
+    // if ($context->contextlevel != CONTEXT_MODULE) {
+        // send_file_not_found();
+    // }
+
+    require_login($course, true, $cm);
+	// Leave this line out if you set the itemid to null in make_pluginfile_url (set $itemid to 0 instead).
+    $itemid = array_shift($args); // The first item in the $args array.
+ 
+    // Use the itemid to retrieve any relevant data records and perform any security checks to see if the
+    // user really does have access to the file in question.
+ 
+    // Extract the filename / filepath from the $args array.
+    $filename = array_pop($args); // The last item in the $args array.
+    if (!$args) {
+        $filepath = '/'; // $args is empty => the path is '/'
+    } else {
+        $filepath = '/'.implode('/', $args).'/'; // $args contains elements of the filepath
+    }
+	// $context = context_course::instance($cm->course);
+    // Retrieve the file from the Files API.
+    $fs = get_file_storage();
+    $file = $fs->get_file($context->id, 'mod_signature', $filearea, $itemid, $filepath, $filename);
+    if (!$file) {
+        return false; // The file does not exist.
+	}
+	
+	return $file;
+	
+	// send_stored_file($file, 86400, 0, $forcedownload, $options);	
+    // send_file_not_found();
+}
+
+
+
+
 
 /**
  * Removes an instance of the mod_signature from the database.
@@ -308,6 +363,10 @@ function signature_update_grades($moduleinstance, $userid = 0) {
  * @return string[].
  */
 function signature_get_file_areas($course, $cm, $context) {
+	$fs = get_file_storage();
+	$context = context_course::instance($cm->course);
+	$files = $fs->get_area_files($context->id, 'mod_signature', 'content', 0); 
+	
     return array();
 }
 
@@ -330,53 +389,6 @@ function signature_get_file_areas($course, $cm, $context) {
  */
 function signature_get_file_info($browser, $areas, $course, $cm, $context, $filearea, $itemid, $filepath, $filename) {
     return null;
-}
-
-/**
- * Serves the files from the mod_signature file areas.
- *
- * @package     mod_signature
- * @category    files
- *
- * @param stdClass $course The course object.
- * @param stdClass $cm The course module object.
- * @param stdClass $context The mod_signature's context.
- * @param string $filearea The name of the file area.
- * @param array $args Extra arguments (itemid, path).
- * @param bool $forcedownload Whether or not force download.
- * @param array $options Additional options affecting the file serving.
- */
-function signature_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, $options = array()) {
-    global $DB, $CFG;
-	
-    if ($context->contextlevel != CONTEXT_MODULE) {
-        send_file_not_found();
-    }
-
-    require_login($course, true, $cm);
-	// Leave this line out if you set the itemid to null in make_pluginfile_url (set $itemid to 0 instead).
-    $itemid = array_shift($args); // The first item in the $args array.
- 
-    // Use the itemid to retrieve any relevant data records and perform any security checks to see if the
-    // user really does have access to the file in question.
- 
-    // Extract the filename / filepath from the $args array.
-    $filename = array_pop($args); // The last item in the $args array.
-    if (!$args) {
-        $filepath = '/'; // $args is empty => the path is '/'
-    } else {
-        $filepath = '/'.implode('/', $args).'/'; // $args contains elements of the filepath
-    }
-	$context = context_course::instance($cm->course);
-    // Retrieve the file from the Files API.
-    $fs = get_file_storage();
-    $file = $fs->get_file($context->id, 'mod_signature', $filearea, $itemid, $filepath, $filename);
-    if (!$file) {
-        return false; // The file does not exist.
-	}	
-	
-	send_stored_file($file, 86400, 0, $forcedownload, $options);	
-    send_file_not_found();
 }
 
 /**
@@ -441,3 +453,9 @@ function get_temp_file( $moduleinstance ){
 	
 	return false ;
 }
+
+function get_issue_uuid() {
+        global $CFG;
+        require_once($CFG->libdir . '/horde/framework/Horde/Support/Uuid.php');
+        return (string)new Horde_Support_Uuid();
+    }

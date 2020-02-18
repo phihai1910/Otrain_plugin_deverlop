@@ -39,7 +39,7 @@ class mod_signature_mod_form extends moodleform_mod {
      * Defines forms elements
      */
     public function definition() {
-        global $CFG;
+        global $CFG,$COURSE;
 
         $mform = $this->_form;
 
@@ -82,12 +82,25 @@ class mod_signature_mod_form extends moodleform_mod {
         if ($required) {
             $mform->addRule('signature_content', get_string('required'), 'required', null, 'client');
         }
-		
+		$fileoptions = array('subdirs'=>0,
+                                'maxbytes'=>$COURSE->maxbytes,
+                                'accepted_types'=>'pdf',
+                                'maxfiles'=>1,
+                                'return_types'=>FILE_INTERNAL);
 		$mform->addElement('filepicker', 'userfile', get_string('file'), null,
-                   array('maxbytes' => 5000000000, 'accepted_types' => array('pdf')));
+                  $fileoptions );
 		$mform->addElement('text' , 'pagenumber', 'Page sign' );
 		$mform->addElement('text' , 'x' , 'Location x');
 		$mform->addElement('text' , 'y' , 'Location Y');
+		
+		
+		$filemanager_options = array();
+        $filemanager_options['accepted_types'] = '*';
+        $filemanager_options['maxbytes'] = 0;
+        $filemanager_options['maxfiles'] = -1;
+        $filemanager_options['mainfile'] = true;
+
+        $mform->addElement('filemanager', 'files', get_string('selectfiles'), null, $filemanager_options);
 		
         // Add standard grading elements.
         // $this->standard_grading_coursemodule_elements();

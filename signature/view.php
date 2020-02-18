@@ -27,7 +27,7 @@ require_once(__DIR__.'/lib.php');
 require_once($CFG->libdir.'/pdflib.php');
 
 require_once($CFG->dirroot.'/mod/assign/feedback/editpdf/fpdi/fpdi.php');
-global $USER;
+global $USER, $DB ;
 
 // Course_module ID, or
 $id = optional_param('id', 0, PARAM_INT);
@@ -50,14 +50,13 @@ require_login($course, true, $cm);
 
 
 
-
+$contextcourse = context_course::instance($cm->course);
 $modulecontext = context_module::instance($cm->id);
+$context = context_system::instance();
 
 $content = $moduleinstance->signature_content;
 
-
-$link = signature_pluginfile( $course , $cm , $modulecontext , 'content', array( $moduleinstance->userfile , $moduleinstance->filename ) , false  );
-
+// $file = signature_pluginfile( $course , $cm ,$context , 'content', array( $moduleinstance->userfile , $moduleinstance->filename ) , false  );
 
 if(isset( $_POST['hiddenSigDataa'] ) ){
 	
@@ -73,8 +72,42 @@ if(isset( $_POST['hiddenSigDataa'] ) ){
 	$to = 'tech@otrain.com.au,'.$USER->email;
 	
 	include 'sign_copy2.php';
+	
 	// include 'sign_copy.php';
 	$pdf_copy = $pdf->Output($course->fullname.' copy.pdf', 'E');
+	
+	
+
+	
+	
+	
+	$signatureid = $DB->insert_record( 'signature_issues', 
+		array( 	'userid' => $USER->id, 
+				'signatureid' => $cm->id , 
+				'signaturename' => $USER->id.' '. $course->fullname.' copy',
+				'code' => get_issue_uuid(),
+				'timecreated' => time(),
+				// 'pathnamehash' =>$file->get_pathnamehash()
+	));
+	$fileinfo = array('contextid' => $cm->id,
+			'component' => 'mod_signature',
+			'filearea' => 'content',
+			'itemid' => $signatureid,
+			'filepath' => '/',
+			'mimetype' => 'application/pdf',
+			'userid' => $USER->id,
+			'filename' => $course->fullname.' copy.pdf'
+	);
+
+	$fs = get_file_storage();
+	$file = $fs->create_file_from_string($fileinfo, $pdf->Output('', 'S'));
+	
+	$signclass = new stdClass();
+	$signclass->id = $signatureid ;
+	$signclass->pathnamehash =   $file->get_pathnamehash();
+	$DB->update_record( 'signature_issues' , $signclass) ;
+	
+	
 	include 'sign_certification.php';
 	$pdf_certification = $pdf->Output($course->fullname. ' signature completion certificate.pdf', 'E');
 	include 'sign_email.php';
