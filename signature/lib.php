@@ -178,11 +178,10 @@ function signature_update_instance($moduleinstance, $mform = null) {
 	// $data = $mform->get_data()
 	$context = context_course::instance($moduleinstance->course);
 	$contextid = $context->id;										
-$draftitemid = file_get_submitted_draft_itemid('managerfiles');
+	$draftitemid = file_get_submitted_draft_itemid('managerfiles');
 
 	file_prepare_draft_area($draftitemid, $context->id, 'mod_signature', 'attachment', $moduleinstance->id ,
                         array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 50));
-
 
     return $DB->update_record('signature', $moduleinstance);
 }
@@ -428,6 +427,13 @@ function signature_extend_navigation($signaturenode, $course, $module, $cm) {
  * @param navigation_node $signaturenode {@link navigation_node}
  */
 function signature_extend_settings_navigation($settingsnav, $signaturenode = null) {
+	global $PAGE;
+	$url = new moodle_url('/mod/signature/view2.php', array('id'=>$PAGE->cm->id));
+$node = navigation_node::create('View issues Certification',
+		new moodle_url($url, array('mode'=>'group')),
+		navigation_node::TYPE_SETTING, null, 'mod_quiz_groupoverrides');
+$signaturenode->add_node($node, 1);
+	
 }
 
 

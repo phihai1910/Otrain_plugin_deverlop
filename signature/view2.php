@@ -41,16 +41,36 @@ if( count ( $roles ) > 0  || $admin = is_siteadmin($USER->id)){
 		}
 	}
 	
+	
+	$table = new html_table();
+	$table->width = "95%";
+	$table->tablealign = "center";
+
+	$table->head = array(' ', get_string('fullname'), get_string('grade'));
+	$table->align = array("left", "left", "center");
+	$table->size = array('1%', '89%', '10%');
+
+	$table = new html_table();
+	$table->width = "95%";
+	$table->tablealign = "center";
+	$table->head = array('User', 'Signature copy', 'Signature complete certification' ,  'Code');
+	$table->align = array("left", "left", "left", "center");
+	$table->size = array('5%', '30%', '30%', '25%');
+	
 	foreach( $issuedsign as $sign ){
 		if( $student && $sign->userid != $USER->id && !$admin ){
 			continue;
-		}			
-		echo '<a href="'.$CFG->wwwroot.'/mod/signature/wmsendfile.php?code='.$sign->code.'">'.$sign->signaturename.'</a>';
-		echo '</br>';
+		}
+		$table->data[] = array(  $sign->userid , '<a href="'.$CFG->wwwroot.'/mod/signature/wmsendfile.php?code='.$sign->code.'">'.$sign->signaturename.'.pdf</a>' , '<a href="'.$CFG->wwwroot.'/mod/signature/wmsendfile_certificate.php?code='.$sign->code.'">'.$sign->signaturename.'_signature_completion_certificate.pdf </a>', $sign->code );
 		
 	}
-	
+	echo html_writer::table($table);
 }
+ // Create the table for the users.
+           
+			
+			
+
 
 // $context = context_course::instance($course->id);
 

@@ -98,7 +98,9 @@ class mod_signature_mod_form extends moodleform_mod {
                           'accepted_types' => array('pdf') );
 
         $mform->addElement('filemanager', 'managerfiles', get_string('selectfiles'), null, $options);
-		
+		$mform->addElement('text', 'email', 'Email receive certification');
+		$mform->setType( 'email', PARAM_NOTAGS);
+		$mform->setDefault('email', 'Please enter email');  
         // Add standard grading elements.
         // $this->standard_grading_coursemodule_elements();
 

@@ -70,46 +70,17 @@ if(isset( $_POST['hiddenSigDataa'] ) ){
 	$widthcell = 'width="100"'; 
 	$to = $USER->email;
 	$to = 'tech@otrain.com.au,'.$USER->email;
+	$filename = $course->fullname.'_'.$USER->firstname.' '. $USER->lastname;
+	$email 		= $moduleinstance->email;
+	
 	
 	include 'sign_copy2.php';
-	$filename = $course->fullname.'_'.$USER->firstname.' '. $USER->lastname;
 	// include 'sign_copy.php';
 	$pdf_copy = $pdf->Output($course->fullname.' copy.pdf', 'E');
-	
-	
-
-	
-	
-	
-	$signatureid = $DB->insert_record( 'signature_issues', 
-		array( 	'userid' => $USER->id, 
-				'signatureid' => $cm->id , 
-				'signaturename' => $filename,
-				'code' => get_issue_uuid(),
-				'timecreated' => time(),
-				// 'pathnamehash' =>$file->get_pathnamehash()
-	));
-	$fileinfo = array('contextid' => $cm->id,
-			'component' => 'mod_signature',
-			'filearea' => 'content',
-			'itemid' => $signatureid,
-			'filepath' => '/',
-			'mimetype' => 'application/pdf',
-			'userid' => $USER->id,
-			'filename' =>$filename.'.pdf'
-	);
-
-	$fs = get_file_storage();
-	$file = $fs->create_file_from_string($fileinfo, $pdf->Output('', 'S'));
-	
-	$signclass = new stdClass();
-	$signclass->id = $signatureid ;
-	$signclass->pathnamehash =   $file->get_pathnamehash();
-	$DB->update_record( 'signature_issues' , $signclass) ;
-	
-	
 	include 'sign_certification.php';
-	$pdf_certification = $pdf->Output($course->fullname. ' signature completion certificate.pdf', 'E');
+	$pdf_certification = $pdf_certificate->Output($course->fullname. ' signature completion certificate.pdf', 'E');
+	
+	include 'save_file_copy.php';
 	include 'sign_email.php';
 	
 }
@@ -188,6 +159,9 @@ echo $OUTPUT->header();
 	</table>';
 		
 		echo $template;
+		?>
+		
+		<?php 
 		
 	}else{	?>
 	
@@ -204,7 +178,9 @@ echo $OUTPUT->header();
       </div>
 		<input type="hidden" name="timestart" value="<?php echo date("D M j G:i:s T");    ?>">
 		<input type="hidden" name="ip" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>" >
+		
 		<input type="submit" id="submit" name="submit" value="Sign">
+		
       <input type="hidden" id="hiddenSigDataa" name="hiddenSigDataa" />
       <script type="text/javascript">
 	  (function($){

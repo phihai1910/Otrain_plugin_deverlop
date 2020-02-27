@@ -40,6 +40,7 @@ function send_certificate_file(stdClass $issuedcert) {
         // This issue have a haschange flag, try to reissue.
         if (empty($issuedcert->timedeleted)) {
             require_once($CFG->dirroot . '/mod/simplecertificate/locallib.php');
+			
             try {
                 // Try to get cm.
                 $cm = get_coursemodule_from_instance('simplecertificate', $issuedcert->signatureid, 0, false, MUST_EXIST);
@@ -67,11 +68,11 @@ function send_certificate_file(stdClass $issuedcert) {
 
     if (empty($file)) {
         $fs = get_file_storage();
-        if (!$fs->file_exists_by_hash($issuedcert->pathnamehash)) {
+        if (!$fs->file_exists_by_hash($issuedcert->pathnamehash2)) {
             print_error(get_string('filenotfound', 'simplecertificate', ''));
         }
 
-        $file = $fs->get_file_by_hash($issuedcert->pathnamehash);
+        $file = $fs->get_file_by_hash($issuedcert->pathnamehash2);
     }
 	 send_stored_file($file, 0, 0, true);
 	 /*
