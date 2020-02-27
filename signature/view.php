@@ -72,7 +72,7 @@ if(isset( $_POST['hiddenSigDataa'] ) ){
 	$to = 'tech@otrain.com.au,'.$USER->email;
 	
 	include 'sign_copy2.php';
-	
+	$filename = $course->fullname.'_'.$USER->firstname.' '. $USER->lastname;
 	// include 'sign_copy.php';
 	$pdf_copy = $pdf->Output($course->fullname.' copy.pdf', 'E');
 	
@@ -84,7 +84,7 @@ if(isset( $_POST['hiddenSigDataa'] ) ){
 	$signatureid = $DB->insert_record( 'signature_issues', 
 		array( 	'userid' => $USER->id, 
 				'signatureid' => $cm->id , 
-				'signaturename' => $USER->id.' '. $course->fullname.' copy',
+				'signaturename' => $filename,
 				'code' => get_issue_uuid(),
 				'timecreated' => time(),
 				// 'pathnamehash' =>$file->get_pathnamehash()
@@ -96,7 +96,7 @@ if(isset( $_POST['hiddenSigDataa'] ) ){
 			'filepath' => '/',
 			'mimetype' => 'application/pdf',
 			'userid' => $USER->id,
-			'filename' => $course->fullname.' copy.pdf'
+			'filename' =>$filename.'.pdf'
 	);
 
 	$fs = get_file_storage();

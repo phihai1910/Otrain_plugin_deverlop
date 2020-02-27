@@ -156,10 +156,10 @@ function signature_update_instance($moduleinstance, $mform = null) {
 	$moduleinstance->filename = $mform->get_new_filename('userfile');
 	/* modifier database field */
 	$moduleinstance->signature_content = $moduleinstance->signature_content['text'];
-	// store file 
-	// $context = context_course::instance($moduleinstance->course);
-	// $contextid = $context->id;
- $context = context_system::instance();
+	
+	
+	
+	$context = context_system::instance();
 	 $contextid = $context->id;
 	$mform->save_stored_file('userfile',
                                                        $contextid ,
@@ -169,6 +169,20 @@ function signature_update_instance($moduleinstance, $mform = null) {
                                                         '/',
                                                         $mform->get_new_filename('userfile'),
                                                         true);
+	
+
+	
+	
+	
+	//store file 
+	// $data = $mform->get_data()
+	$context = context_course::instance($moduleinstance->course);
+	$contextid = $context->id;										
+$draftitemid = file_get_submitted_draft_itemid('managerfiles');
+
+	file_prepare_draft_area($draftitemid, $context->id, 'mod_signature', 'attachment', $moduleinstance->id ,
+                        array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 50));
+
 
     return $DB->update_record('signature', $moduleinstance);
 }

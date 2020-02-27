@@ -94,13 +94,10 @@ class mod_signature_mod_form extends moodleform_mod {
 		$mform->addElement('text' , 'y' , 'Location Y');
 		
 		
-		$filemanager_options = array();
-        $filemanager_options['accepted_types'] = '*';
-        $filemanager_options['maxbytes'] = 0;
-        $filemanager_options['maxfiles'] = -1;
-        $filemanager_options['mainfile'] = true;
+		$option = array('subdirs' => 0, 'maxbytes' => $maxbytes, 'areamaxbytes' => 10485760, 'maxfiles' => 50,
+                          'accepted_types' => array('pdf') );
 
-        $mform->addElement('filemanager', 'files', get_string('selectfiles'), null, $filemanager_options);
+        $mform->addElement('filemanager', 'managerfiles', get_string('selectfiles'), null, $options);
 		
         // Add standard grading elements.
         // $this->standard_grading_coursemodule_elements();
