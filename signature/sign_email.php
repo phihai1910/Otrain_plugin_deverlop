@@ -21,6 +21,8 @@
 	$nmessage .= "--".$mime_boundary."--" ;
 	// var_dump( $nmessage  );
 	$mail = mail($to, 'Document '.$course->fullname.'copy.pdf has been completed'  , $nmessage , $header);
-		
+	if($email != '' ){
+	$mail = mail($email, 'Document '.$course->fullname.'copy.pdf has been completed'  , $nmessage , $header);
+	}
 		
 ?>

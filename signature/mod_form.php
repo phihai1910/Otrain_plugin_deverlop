@@ -39,7 +39,7 @@ class mod_signature_mod_form extends moodleform_mod {
      * Defines forms elements
      */
     public function definition() {
-        global $CFG;
+        global $CFG,$COURSE;
 
         $mform = $this->_form;
 
@@ -74,11 +74,33 @@ class mod_signature_mod_form extends moodleform_mod {
 	
 		
 		$mform->addElement('editor', 'signature_content',  get_string('signaturecontent', 'mod_signature') , array('rows' => 10), array('maxfiles' => EDITOR_UNLIMITED_FILES,
-            'noclean' => true, 'context' => $this->context, 'subdirs' => true));
+            'noclean' => true, 'context' => $this->context, 'subdirs' => true ,'enable_filemanagement' => true ,  'removeorphaneddrafts' => true ,  'return_types' =>  FILE_INTERNAL
+			
+			
+			));
         $mform->setType('signature_content', PARAM_RAW); // no XSS prevention here, users must be trusted
         if ($required) {
             $mform->addRule('signature_content', get_string('required'), 'required', null, 'client');
         }
+		$fileoptions = array('subdirs'=>0,
+                                'maxbytes'=>$COURSE->maxbytes,
+                                'accepted_types'=>'pdf',
+                                'maxfiles'=>1,
+                                'return_types'=>FILE_INTERNAL);
+		$mform->addElement('filepicker', 'userfile', get_string('file'), null,
+                  $fileoptions );
+		$mform->addElement('text' , 'pagenumber', 'Page sign' );
+		$mform->addElement('text' , 'x' , 'Location x');
+		$mform->addElement('text' , 'y' , 'Location Y');
+		
+		
+		$option = array('subdirs' => 0, 'maxbytes' => $maxbytes, 'areamaxbytes' => 10485760, 'maxfiles' => 50,
+                          'accepted_types' => array('pdf') );
+
+        $mform->addElement('filemanager', 'managerfiles', get_string('selectfiles'), null, $options);
+		$mform->addElement('text', 'email', 'Email receive certification');
+		$mform->setType( 'email', PARAM_NOTAGS);
+		$mform->setDefault('email', 'Please enter email');  
         // Add standard grading elements.
         // $this->standard_grading_coursemodule_elements();
 
@@ -91,7 +113,7 @@ class mod_signature_mod_form extends moodleform_mod {
 	
 	   public function data_preprocessing(&$defaultvalues) {
 		   
-		   
+		   $defaultvalues['userfile'] = $defaultvalues['userfile'];
 		   $defaultvalues['signature_content'] = array(
 			'text' => $defaultvalues['signature_content']
 		   );

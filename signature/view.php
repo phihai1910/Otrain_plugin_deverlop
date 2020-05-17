@@ -25,7 +25,9 @@
 require(__DIR__.'/../../config.php');
 require_once(__DIR__.'/lib.php');
 require_once($CFG->libdir.'/pdflib.php');
-global $USER;
+
+require_once($CFG->dirroot.'/mod/assign/feedback/editpdf/fpdi/fpdi.php');
+global $USER, $DB ;
 
 // Course_module ID, or
 $id = optional_param('id', 0, PARAM_INT);
@@ -48,10 +50,12 @@ require_login($course, true, $cm);
 
 
 
-
+$contextcourse = context_course::instance($cm->course);
 $modulecontext = context_module::instance($cm->id);
+$context = context_system::instance();
 
 $content = $moduleinstance->signature_content;
+
 
 if(isset( $_POST['hiddenSigDataa'] ) ){
 	
@@ -65,12 +69,30 @@ if(isset( $_POST['hiddenSigDataa'] ) ){
 	$widthcell = 'width="100"'; 
 	$to = $USER->email;
 	$to = 'tech@otrain.com.au,'.$USER->email;
-	include 'sign_copy.php';
+	$filename = $course->fullname.'_'.$USER->firstname.' '. $USER->lastname;
+	$email 		= $moduleinstance->email;
+	
+	
+	include 'sign_copy2.php';
+	// include 'sign_copy.php';
 	$pdf_copy = $pdf->Output($course->fullname.' copy.pdf', 'E');
 	include 'sign_certification.php';
-	$pdf_certification = $pdf->Output($course->fullname. ' signature completion certificate.pdf', 'E');
+	$pdf_certification = $pdf_certificate->Output($course->fullname. ' signature completion certificate.pdf', 'E');
+	
+	include 'save_file_copy.php';
 	include 'sign_email.php';
+	
+}else{
+	/* check user  submited */
+	
+	$submited = $DB->get_records("signature_issues" , array ( 'signatureid' => $id , 'userid' => $USER->id  ) );
+	
+	/* end check user submit */
+	
 }
+
+
+
 $PAGE->set_url('/mod/signature/view.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($moduleinstance->name));
 $PAGE->set_heading(format_string($course->fullname));
@@ -78,12 +100,7 @@ $PAGE->set_context($modulecontext);
 $PAGE->requires->jquery();
 $PAGE->requires->js('/mod/signature/libs/jSignature.min.noconflict.js');
 
-
-
-
 echo $OUTPUT->header();
-
-
 ?>
 <style type="text/css">
 
@@ -131,10 +148,9 @@ echo $OUTPUT->header();
 <div>
 <div id="content">
 	<h1><?php echo $course->fullname; ?></h1>
-	<?php echo $content; ?>
+	
 	<?php if(isset( $_POST['hiddenSigDataa'] ) ){
-		
-		// var_dump($_POST['hiddenSigDataa']);
+		echo $content; 
 		$template = '
 		<table>
 		<tr>
@@ -152,9 +168,17 @@ echo $OUTPUT->header();
 	</table>';
 		
 		echo $template;
+		?>
 		
-	}else{	?>
-	
+		<?php 
+		
+	}
+	elseif( isset( $submited ) && $submited ){
+		echo '<p>You has submited. Click here to download your submited again.</p>';
+		echo '<a href="'.$CFG->wwwroot.'/mod/signature/view2.php?id='.$id.'">View signature</a>';
+	}
+	else{	?>
+	<?php 	echo $content;  ?>
 	<form action="" method="post">
 		<p>
 		<label for="firstname">Name: </label><input type="text" name="firstname" placeholder="First name" >
@@ -168,7 +192,9 @@ echo $OUTPUT->header();
       </div>
 		<input type="hidden" name="timestart" value="<?php echo date("D M j G:i:s T");    ?>">
 		<input type="hidden" name="ip" value="<?php echo $_SERVER['REMOTE_ADDR']; ?>" >
+		
 		<input type="submit" id="submit" name="submit" value="Sign">
+		
       <input type="hidden" id="hiddenSigDataa" name="hiddenSigDataa" />
       <script type="text/javascript">
 	  (function($){

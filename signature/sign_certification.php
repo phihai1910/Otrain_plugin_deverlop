@@ -2,19 +2,19 @@
 
 
 
-$pdf = new pdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-$pdf->SetTitle('Signature certificate');
-$pdf->SetSubject('Signature');
+$pdf_certificate = new pdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+$pdf_certificate->SetTitle('Signature certificate');
+$pdf_certificate->SetSubject('Signature');
 
-$pdf->SetHeaderData($CFG->root.'/mod/signature/demo.png' , 30  );
+$pdf_certificate->SetHeaderData($CFG->root.'/mod/signature/demo.png' , 30  );
 
-$pdf->AddPage();
+$pdf_certificate->AddPage();
 
 
-$pdf->WriteHTML('<h1 style="text-align:center">Certificate of Completion</h1>');
-$pdf->WriteHTML('<h3>Summary</h3>'); 
-$pdf->Ln(5);
-$pdf->WriteHTML('<div>
+$pdf_certificate->WriteHTML('<h1 style="text-align:center">Certificate of Completion</h1>');
+$pdf_certificate->WriteHTML('<h3>Summary</h3>'); 
+$pdf_certificate->Ln(5);
+$pdf_certificate->WriteHTML('<div>
 	<table>
 		<tr>
 			<td '.$widthcell.' >Sent on</td>
@@ -26,13 +26,13 @@ $pdf->WriteHTML('<div>
 		</tr>
 	</table>
 </div>');
-$pdf->Ln(10);
-$pdf->WriteHTML('<h3>Recipients</h3>');
-$pdf->Ln(5); 
+$pdf_certificate->Ln(10);
+$pdf_certificate->WriteHTML('<h3>Recipients</h3>');
+$pdf_certificate->Ln(5); 
 
 
 		
-$pdf->WriteHTML('<div>
+$pdf_certificate->WriteHTML('<div>
 	<table border="1" cellpadding="10" >
 		<tr><td colspan="2">'. $USER->firstname.' '. $USER->lastname .' ( '. $USER->email.' )</td></tr>
 		<tr>
